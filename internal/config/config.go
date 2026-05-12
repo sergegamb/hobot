@@ -5,9 +5,10 @@ import (
 )
 
 type Config struct {
-	BotToken string
-
-	AdminTelegramID int64
+	BotToken         string
+	AdminTelegramID  int64
+	ManageEngineBaseURL string
+	ManageEngineAPIKey  string
 }
 
 func Load() (*Config, error) {
@@ -25,10 +26,11 @@ func Load() (*Config, error) {
 
 	cfg := &Config{
 		BotToken: viper.GetString("BOT_TOKEN"),
-
 		AdminTelegramID: viper.GetInt64(
 			"ADMIN_TELEGRAM_ID",
 		),
+		ManageEngineBaseURL: viper.GetString("MANAGEENGINE_BASE_URL"),
+		ManageEngineAPIKey:  viper.GetString("MANAGEENGINE_API_KEY"),
 	}
 
 	return cfg, nil

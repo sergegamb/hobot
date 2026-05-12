@@ -6,7 +6,9 @@ import (
 
 	"github.com/sergegamb/hobot/internal/auth"
 	"github.com/sergegamb/hobot/internal/config"
+	"github.com/sergegamb/hobot/internal/managedesk"
 	"github.com/sergegamb/hobot/internal/telegram/handlers"
+	"github.com/sergegamb/hobot/internal/telegram/router"
 
 	tele "gopkg.in/telebot.v4"
 )
@@ -35,14 +37,16 @@ func main() {
 		authService,
 	)
 
-	bot.Handle(
-		"/tickets",
-		auth.RequireAuth(
-			authService,
-			bot,
-			cfg.AdminTelegramID,
-			handlers.TicketsHandler(),
-		),
+	managedeskClient := managedesk.NewClient(
+		cfg.ManageEngineBaseURL,
+		cfg.ManageEngineAPIKey,
+	)
+
+	router.Register(
+		bot,
+		cfg,
+		authService,
+		managedeskClient,
 	)
 
 	bot.Start()

@@ -2,6 +2,7 @@ package managedesk
 
 import (
     "crypto/tls"
+    "log"
 
     "github.com/go-resty/resty/v2"
 )
@@ -18,6 +19,7 @@ func NewClient(
     baseURL string,
     apiKey string,
 ) *Client {
+    log.Printf("[ManageDeskAPI] NewClient: Initializing client with baseURL=%s\n", baseURL)
 
     httpClient := resty.New()
 
@@ -33,6 +35,8 @@ func NewClient(
             InsecureSkipVerify: true,
         },
     )
+
+    log.Println("[ManageDeskAPI] NewClient: Client initialized successfully")
 
     return &Client{
         BaseURL: baseURL,

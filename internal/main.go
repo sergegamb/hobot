@@ -14,11 +14,13 @@ import (
 )
 
 func main() {
+	log.Println("[STARTUP] Starting bot...")
 
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("[STARTUP] Configuration loaded successfully")
 
 	pref := tele.Settings{
 		Token:  cfg.BotToken,
@@ -48,6 +50,8 @@ func main() {
 		authService,
 		managedeskClient,
 	)
+	log.Println("[STARTUP] Router registered successfully")
 
+	log.Println("[STARTUP] Bot is running and listening for messages...")
 	bot.Start()
 }

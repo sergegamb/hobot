@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"log"
 
 	tele "gopkg.in/telebot.v4"
 )
@@ -14,19 +15,27 @@ func RequireAuth(
 ) tele.HandlerFunc {
 
 	return func(c tele.Context) error {
-
 		user := c.Sender()
+		log.Printf("[RequireAuth] Callback/Command from UserID: %d, Username: %s", user.ID, user.Username)
+		
+		// Debug: Log callback data if this is a callback
+		if c.Callback() != nil {
+			log.Printf("[RequireAuth] Callback data: %s", c.Callback().Data)
+		}
 
 		if auth.IsApproved(user.ID) {
+			log.Printf("[RequireAuth] User %d is approved, proceeding to handler", user.ID)
 			return next(c)
 		}
 
 		if auth.IsPending(user.ID) {
+			log.Printf("[RequireAuth] User %d has pending auth request", user.ID)
 			return c.Send(
 				"Authentication request already sent to administrator.",
 			)
 		}
 
+		log.Printf("[RequireAuth] User %d is NOT approved, sending auth request", user.ID)
 		auth.AddPending(user.ID)
 
 		markup := &tele.ReplyMarkup{}
